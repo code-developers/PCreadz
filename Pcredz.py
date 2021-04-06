@@ -59,3 +59,22 @@ PcredzPath = os.path.abspath(os.path.join(os.path.dirname(__file__)))+"/"
 Filename = PcredzPath+"CredentialDump-Session.log"
 l= logging.getLogger('Credential-Session')
 l.addHandler(logging.FileHandler(Filename,'a'))
+
+def WriteData(outfile, data, user):
+	outfile = PcredzPath+outfile
+	if type(user) is str:
+		user = user.encode('latin-1')
+	if not os.path.isfile(outfile):
+		with open(outfile,"w") as outf:
+			outf.write(data + '\n')
+		return
+	with open(outfile,"r") as filestr:
+		if re.search(codecs.encode(user,'hex'), codecs.encode(filestr.read().encode('latin-1'),'hex')):
+			return False
+	with open(outfile,"a") as outf2:
+		outf2.write(data + '\n')
+
+if activate_cc:
+	print("CC number scanning activated\n")
+else:
+	print("CC number scanning is deactivated\n")
